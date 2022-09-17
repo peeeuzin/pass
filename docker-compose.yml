@@ -9,8 +9,8 @@ services:
         volumes:
             - 'postgresql_data:/var/lib/postgresql'
         environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASS}
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
         networks:
             - app-net
 
@@ -23,36 +23,35 @@ services:
         volumes:
             - 'rabbitmq_data:/var/lib/rabbitmq'
         environment:
-            - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+            - RABBITMQ_DEFAULT_USER=rabbitmq
+            - RABBITMQ_DEFAULT_PASS=rabbitmq
         networks:
             - app-net
 
     api:
         build: ./api
-        command: node .
+        command: yarn dev
         container_name: pass_api
         ports:
-            - '4000:3000'
+            - '4000:4000'
         environment:
-            - RABBITMQ_USER=${RABBITMQ_USER}
-            - RABBITMQ_PASS=${RABBITMQ_PASS}
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASS=${POSTGRES_PASS}
+            - DATABASE_URL=postgres://postgres:postgres@localhost:5432/pass_api
+            - JWT_SECRET=bro_this_is_a_insane_secret
         volumes:
             - ./api:/usr/app
+        depends_on:
+            - postgres
 
     engine:
         build: ./engine
-        command: cargo run --release
+        command: cargo watch -x run
         container_name: pass_engine
         environment:
-            - RABBITMQ_USER=${RABBITMQ_USER}
-            - RABBITMQ_PASS=${RABBITMQ_PASS}
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASS=${POSTGRES_PASS}
+            - DATABASE_URL=postgres://postgres:postgres@localhost:5432/pass_engine
         volumes:
             - ./engine:/usr/app
+        depends_on:
+            - postgres
 
 networks:
     app-net:
