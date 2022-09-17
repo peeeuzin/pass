@@ -31,7 +31,7 @@ async function LoginUserService(params: Params) {
 
     const userPassword = user.password;
 
-    const isPasswordCorrect = bcrypt.compareSync(userPassword, params.password);
+    const isPasswordCorrect = bcrypt.compareSync(params.password, userPassword);
 
     if (!isPasswordCorrect) {
         throw new HTTPError('password.incorrect', 400);

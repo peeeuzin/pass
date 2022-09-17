@@ -17,6 +17,7 @@
             "@errors/*": ["./src/errors/*"],
             "@middlewares/*": ["./src/middlewares/*"],
             "@utils/*": ["./src/utils/*"]
-        }
+        },
+        "typeRoots": ["./src/@types", "node_modules/@types"]
     }
 }

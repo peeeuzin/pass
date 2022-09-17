@@ -1,19 +1,20 @@
 import { Request, Response } from 'express';
 import { HTTPError } from '@errors/HTTPError';
-import { LoginUserService } from '@services/user/auth/LoginUser';
+import { RegisterUserService } from '@services/user/auth/RegisterUser';
 
 async function RegisterUserController(request: Request, response: Response) {
-    const { username, email, password } = request.body;
+    const { username, email, password, name } = request.body;
 
     try {
-        if (!username && !email)
-            throw new HTTPError('email.or.username.required', 400);
+        if (!username) throw new HTTPError('username.required', 400);
         if (!password) throw new HTTPError('password.required', 400);
+        if (!email) throw new HTTPError('email.required', 400);
 
-        const service = await LoginUserService({
-            username,
+        const service = await RegisterUserService({
             email,
+            username,
             password,
+            name,
         });
 
         response.status(200).json(service);
