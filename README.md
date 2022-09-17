@@ -22,4 +22,4 @@ docker compose --env-file .env up -d
 ```
 
 # License
-[Apache-3.0](./LICENSE)
+[Apache-2.0](./LICENSE)
