@@ -33,7 +33,7 @@ async function RegisterUserService(params: Params) {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const user = await prisma.user.create({
+    const { id } = await prisma.user.create({
         data: {
             email,
             username,
@@ -41,6 +41,23 @@ async function RegisterUserService(params: Params) {
             name,
         },
     });
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id,
+        },
+
+        select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+        },
+    });
+
+    if (!user) {
+        throw new HTTPError('unknown.error', 500);
+    }
 
     const token = sign(
         {

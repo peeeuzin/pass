@@ -28,6 +28,7 @@ async function LoginUserService(params: Params) {
     if (!user) {
         throw new HTTPError('user.notFound', 404);
     }
+    const userId = user.id;
 
     const userPassword = user.password;
 
@@ -35,6 +36,23 @@ async function LoginUserService(params: Params) {
 
     if (!isPasswordCorrect) {
         throw new HTTPError('password.incorrect', 400);
+    }
+
+    user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+
+        select: {
+            id: true,
+            name: true,
+            username: true,
+            email: true,
+        },
+    });
+
+    if (!user) {
+        throw new HTTPError('unknown.error', 500);
     }
 
     const token = sign(
