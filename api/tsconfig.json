@@ -16,7 +16,8 @@
             "@prisma": ["./src/prisma/index"],
             "@errors/*": ["./src/errors/*"],
             "@middlewares/*": ["./src/middlewares/*"],
-            "@utils/*": ["./src/utils/*"]
+            "@utils/*": ["./src/utils/*"],
+            "@schedule/*": ["./src/schedule/*"]
         },
         "typeRoots": ["./src/@types", "node_modules/@types"]
     }

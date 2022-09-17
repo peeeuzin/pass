@@ -59,7 +59,6 @@ async function LoginUserService(params: Params) {
         {
             user: {
                 name: user.name,
-                id: user.id,
             },
         },
         process.env.JWT_SECRET as Secret,

@@ -1,6 +1,6 @@
 import { CreateAppService } from '@services/oauth/CreateApp';
 import { Request, Response } from 'express';
-import { HTTPError } from 'src/errors/HTTPError';
+import { HTTPError } from '@errors/HTTPError';
 
 async function CreateAppController(request: Request, response: Response) {
     const { name, description, redirectUrl, homeUrl } = request.body;

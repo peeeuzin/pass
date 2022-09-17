@@ -1,4 +1,6 @@
+import { HTTPError } from '@errors/HTTPError';
 import prisma from '@prisma';
+import { isUrl } from '@utils/checkUrl';
 import { generateToken } from '@utils/genToken';
 
 type Params = {
@@ -11,6 +13,9 @@ type Params = {
 
 async function CreateAppService(params: Params) {
     const { name, description, redirectUrl, homeUrl } = params;
+
+    if (!isUrl(redirectUrl)) throw new HTTPError('redirectUrl.invalid', 400);
+    if (!isUrl(homeUrl)) throw new HTTPError('homeUrl.invalid', 400);
 
     const clientId = await generateToken(32);
     const clientSecret = await generateToken(64);

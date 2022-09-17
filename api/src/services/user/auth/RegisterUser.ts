@@ -63,7 +63,6 @@ async function RegisterUserService(params: Params) {
         {
             user: {
                 name: user.name,
-                id: user.id,
             },
         },
         process.env.JWT_SECRET as Secret,
