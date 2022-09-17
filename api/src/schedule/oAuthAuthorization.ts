@@ -11,6 +11,10 @@ scheduler.scheduleJob('0 10 * * * *', async () => {
         },
     });
 
+    if (auths.length === 0) {
+        return;
+    }
+
     await prisma.oAuthAuthorization.deleteMany({
         where: {
             id: {

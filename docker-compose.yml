@@ -36,6 +36,7 @@ services:
             - '4000:4000'
         environment:
             - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pass_api
+            - RABBITMQ_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f
             - JWT_SECRET=bro_this_is_a_insane_secret
         volumes:
             - ./api:/usr/app
@@ -52,6 +53,7 @@ services:
         container_name: pass_engine
         environment:
             - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pass_engine
+            - RABBITMQ_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f
         volumes:
             - ./engine:/usr/app
         depends_on:

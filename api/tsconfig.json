@@ -17,8 +17,9 @@
             "@errors/*": ["./src/errors/*"],
             "@middlewares/*": ["./src/middlewares/*"],
             "@utils/*": ["./src/utils/*"],
-            "@schedule/*": ["./src/schedule/*"]
+            "@schedule/*": ["./src/schedule/*"],
+            "@amqp": ["./src/rabbitmq/index"]
         },
-        "typeRoots": ["./src/@types", "node_modules/@types"]
+        "typeRoots": ["./src/@types", "./node_modules/@types"]
     }
 }

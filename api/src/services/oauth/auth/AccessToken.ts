@@ -2,6 +2,8 @@ import { HTTPError } from '@errors/HTTPError';
 import prisma from '@prisma';
 import { Secret, sign } from 'jsonwebtoken';
 import ms from 'ms';
+import amqp from '@amqp';
+import { jsonbuf } from '@utils/jsonbuf';
 
 type Params = {
     clientId: string;
@@ -39,11 +41,20 @@ async function AccessTokenService(params: Params) {
         throw new HTTPError('code.expired', 401);
     }
 
-    prisma.oAuthAuthorization.delete({
+    await prisma.oAuthAuthorization.delete({
         where: {
             id: authorization.id,
         },
     });
+
+    // --
+    const channel = await (await amqp).createChannel();
+    channel.sendToQueue(
+        'new_oauth',
+        jsonbuf({
+            user_id: authorization.userId,
+        })
+    );
 
     await prisma.oAuthApp.update({
         where: {

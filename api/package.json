@@ -8,6 +8,7 @@
         "dev": "ts-node-dev --exit-child -r tsconfig-paths/register ./src/server.ts",
         "build": "tsc --build && tscpaths --project ./tsconfig.json -s ./src -o ./dist",
         "prisma": "dotenv -e .env.development prisma",
+        "migrate:deploy": "dotenv -e .env.development prisma migrate deploy",
         "start": "node ."
     },
     "dependencies": {
