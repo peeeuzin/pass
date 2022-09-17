@@ -45,6 +45,19 @@ async function AccessTokenService(params: Params) {
         },
     });
 
+    await prisma.oAuthApp.update({
+        where: {
+            id: app.id,
+        },
+        data: {
+            users: {
+                connect: {
+                    id: authorization.userId,
+                },
+            },
+        },
+    });
+
     const token = sign(
         {
             user: {
