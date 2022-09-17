@@ -9,5 +9,7 @@ COPY . .
 
 EXPOSE 4000
 
+RUN yarn prisma migrate deploy
+
 RUN yarn build
 CMD [ "node", "." ]
