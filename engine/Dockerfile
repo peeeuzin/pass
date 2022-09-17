@@ -1,6 +1,8 @@
 FROM rust
 
-WORKDIR /usr/src/app
+RUN cargo install cargo-watch
+
+WORKDIR /usr/app
 COPY . .
 
 RUN cargo build --release
