@@ -1,0 +1,65 @@
+version: '3.5'
+
+services:
+    postgres:
+        container_name: postgres
+        image: 'postgres:alpine'
+        ports:
+            - '5432:5432'
+        volumes:
+            - 'postgresql_data:/var/lib/postgresql'
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASS}
+        networks:
+            - app-net
+
+    rabbitmq:
+        image: 'rabbitmq:3-management-alpine'
+        container_name: rabbitmq
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        volumes:
+            - 'rabbitmq_data:/var/lib/rabbitmq'
+        environment:
+            - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+            - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
+        networks:
+            - app-net
+
+    api:
+        build: ./api
+        command: node .
+        container_name: pass_api
+        ports:
+            - '4000:3000'
+        environment:
+            - RABBITMQ_USER=${RABBITMQ_USER}
+            - RABBITMQ_PASS=${RABBITMQ_PASS}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASS=${POSTGRES_PASS}
+        volumes:
+            - ./api:/usr/app
+
+    engine:
+        build: ./engine
+        command: cargo run --release
+        container_name: pass_engine
+        environment:
+            - RABBITMQ_USER=${RABBITMQ_USER}
+            - RABBITMQ_PASS=${RABBITMQ_PASS}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASS=${POSTGRES_PASS}
+        volumes:
+            - ./engine:/usr/app
+
+networks:
+    app-net:
+        driver: bridge
+
+volumes:
+    postgresql_data:
+        driver: local
+    rabbitmq_data:
+        driver: local
