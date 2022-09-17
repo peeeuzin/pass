@@ -6,6 +6,17 @@
         "forceConsistentCasingInFileNames": true,
         "strict": true,
         "skipLibCheck": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "baseUrl": ".",
+        "paths": {
+            "@routers/*": ["./src/routers/*"],
+            "@services/*": ["./src/services/*"],
+            "@controllers/*": ["./src/controllers/*"],
+            "@app/*": ["./src/app"],
+            "@prisma": ["./src/prisma/index"],
+            "@errors/*": ["./src/errors/*"],
+            "@middlewares/*": ["./src/middlewares/*"],
+            "@utils/*": ["./src/utils/*"]
+        }
     }
 }
