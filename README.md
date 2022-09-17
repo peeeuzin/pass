@@ -6,19 +6,10 @@ A authenticator for your accounts.
  - **API**: The API for the Pass.
 
 
-## Running with Docker Compose
-To run the Pass, you need to add `.env`, with following content:
-```env
-POSTGRES_USER=<postgres user>
-POSTGRES_PASS=<postgres password>
-
-RABBITMQ_USER=<rabbitmq user>
-RABBITMQ_PASS=<rabbitmq password>
-```
-
-Then, run the following command:
+## Running with Docker Compose in development mode
+To run the Pass, run the following command:
 ```bash
-docker compose --env-file .env up -d
+docker compose up -d
 ```
 
 # License
