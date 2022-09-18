@@ -2,11 +2,11 @@ import scheduler from 'node-schedule';
 import prisma from '@prisma';
 import ms from 'ms';
 
-scheduler.scheduleJob('0 10 * * * *', async () => {
+scheduler.scheduleJob('* 10 * * * *', async () => {
     const auths = await prisma.oAuthAuthorization.findMany({
         where: {
             createdAt: {
-                lt: new Date(Date.now() - ms('10m')),
+                lte: new Date(Date.now() - ms('10m')),
             },
         },
     });
