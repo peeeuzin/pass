@@ -1,19 +1,19 @@
-use futures_lite::stream::StreamExt;
+use futures_lite::StreamExt;
 use lapin::Channel;
 use mongodb::bson::{doc, Document};
 use serde::{Deserialize, Serialize};
+
+pub enum AuthenticationMethod {
+    Code,
+    // OnePress
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct OAuthPayload {
     pub user_id: String,
 }
 
-enum AuthenticationMethod {
-    Code,
-    // OnePress
-}
-
-pub async fn oauth(channel: Channel) {
+pub async fn new_auth(channel: Channel) {
     channel
         .queue_declare("new_oauth", Default::default(), Default::default())
         .await
@@ -79,6 +79,8 @@ async fn manage_method(method: AuthenticationMethod, data: OAuthPayload) {
                 "code": code,
                 "created_at": chrono::Utc::now(),
             };
+
+            println!("{}", code);
 
             if collection
                 .find_one(query.clone(), None)

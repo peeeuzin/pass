@@ -57,8 +57,6 @@ async function AccessTokenService(params: Params) {
         })
     );
 
-    channel.assertQueue('oauth_authorize');
-
     await new Promise<undefined>((resolve) => {
         channel.consume(
             'oauth_authorize',
@@ -69,9 +67,20 @@ async function AccessTokenService(params: Params) {
 
                 const data = JSON.parse(message.content.toString());
 
-                if (data.user_id === authorization.userId) {
-                    resolve(undefined);
-                    channel.ack(message);
+                console.log(data);
+
+                if (data.error) {
+                    throw new HTTPError(data.error, 401);
+                }
+
+                channel.ack(message);
+                if (data.is_correct) {
+                    if (data.user_id === authorization.userId) {
+                        console.log('User authorized');
+                        resolve(undefined);
+                    }
+                } else {
+                    throw new HTTPError('code.notCorrect', 401);
                 }
             },
             {
