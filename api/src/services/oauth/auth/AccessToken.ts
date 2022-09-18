@@ -97,6 +97,9 @@ async function AccessTokenService(params: Params) {
         {
             user: {
                 id: authorization.userId,
+                oauthApp: {
+                    id: app.id,
+                },
             },
         },
         process.env.JWT_SECRET as Secret,

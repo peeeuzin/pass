@@ -58,7 +58,7 @@ async function LoginUserService(params: Params) {
     const token = sign(
         {
             user: {
-                name: user.name,
+                id: user.id,
             },
         },
         process.env.JWT_SECRET as Secret,

@@ -1,6 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import prisma from '@prisma';
+import { decode } from 'jsonwebtoken';
 import { verifyToken } from '@utils/verifyJWT';
+
+type Payload = {
+    user: {
+        isAuthByOAuth: boolean;
+        oauthApp?: {
+            id: string;
+        };
+    };
+};
 
 export async function ensureAuthenticated(
     request: Request,
@@ -30,7 +40,18 @@ export async function ensureAuthenticated(
             return response.status(401).json({
                 error: 'unknown.user',
             });
+
         request.userId = result;
+
+        const payload = decode(token, {
+            json: true,
+        }) as Payload;
+
+        request.user = {
+            id: result,
+            isAuthByOAuth: !!payload.user.oauthApp,
+            oauthApp: payload.user.oauthApp,
+        };
 
         return next();
     } else {
