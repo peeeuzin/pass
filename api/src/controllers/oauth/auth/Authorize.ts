@@ -3,7 +3,7 @@ import { HTTPError } from '@errors/HTTPError';
 import { AuthorizeService } from '@services/oauth/auth/Authorize';
 
 async function AuthorizeController(request: Request, response: Response) {
-    const { client_id: clientId } = request.query;
+    const { clientId } = request.query;
     const { userId } = request;
 
     try {

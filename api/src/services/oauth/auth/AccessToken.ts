@@ -2,7 +2,7 @@ import { HTTPError } from '@errors/HTTPError';
 import prisma from '@prisma';
 import { Secret, sign } from 'jsonwebtoken';
 import ms from 'ms';
-import amqp from '@amqp';
+import { createConnection } from '@amqp';
 import { jsonbuf } from '@utils/jsonbuf';
 
 type Params = {
@@ -48,7 +48,8 @@ async function AccessTokenService(params: Params) {
     });
 
     // --
-    const channel = await (await amqp).createChannel();
+    const amqp = await createConnection();
+    const channel = await amqp.createChannel();
     channel.sendToQueue(
         'new_oauth',
         jsonbuf({

@@ -17,8 +17,8 @@ async function CreateAppService(params: Params) {
     if (!isUrl(redirectUrl)) throw new HTTPError('redirectUrl.invalid', 400);
     if (!isUrl(homeUrl)) throw new HTTPError('homeUrl.invalid', 400);
 
-    const clientId = await generateToken(32);
-    const clientSecret = await generateToken(64);
+    const clientId = await generateToken(16);
+    const clientSecret = await generateToken(32);
 
     const app = await prisma.oAuthApp.create({
         data: {

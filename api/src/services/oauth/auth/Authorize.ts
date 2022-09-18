@@ -32,7 +32,7 @@ async function AuthorizeService(params: Params) {
                     id: userId,
                 },
             },
-            code: await generateToken(32),
+            code: await generateToken(16),
         },
     });
 

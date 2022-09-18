@@ -1,5 +1,6 @@
 import amqp from 'amqplib';
 
-const connection = amqp.connect(process.env.RABBITMQ_URL as string);
-
-export default connection;
+export async function createConnection() {
+    const connection = await amqp.connect(process.env.RABBITMQ_URL as string);
+    return connection;
+}
