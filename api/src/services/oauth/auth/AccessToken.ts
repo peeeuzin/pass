@@ -67,8 +67,6 @@ async function AccessTokenService(params: Params) {
 
                 const data = JSON.parse(message.content.toString());
 
-                console.log(data);
-
                 if (data.error) {
                     throw new HTTPError(data.error, 401);
                 }
@@ -76,7 +74,6 @@ async function AccessTokenService(params: Params) {
                 channel.ack(message);
                 if (data.is_correct) {
                     if (data.user_id === authorization.userId) {
-                        console.log('User authorized');
                         resolve(undefined);
                     }
                 } else {
