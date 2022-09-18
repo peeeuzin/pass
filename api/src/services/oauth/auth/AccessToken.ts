@@ -57,6 +57,29 @@ async function AccessTokenService(params: Params) {
         })
     );
 
+    channel.assertQueue('oauth_authorize');
+
+    await new Promise<undefined>((resolve) => {
+        channel.consume(
+            'oauth_authorize',
+            (message) => {
+                if (!message) {
+                    return;
+                }
+
+                const data = JSON.parse(message.content.toString());
+
+                if (data.user_id === authorization.userId) {
+                    resolve(undefined);
+                    channel.ack(message);
+                }
+            },
+            {
+                consumerTag: 'pass_api',
+            }
+        );
+    });
+
     await prisma.oAuthApp.update({
         where: {
             id: app.id,
