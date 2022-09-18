@@ -31,14 +31,23 @@ pub async fn oauth(channel: Channel) {
 
     while let Some(delivery) = consumer.next().await {
         let delivery = delivery.expect("error caught in consumer");
-        let data: OAuthPayload = serde_json::from_slice(&delivery.data).unwrap();
+        match serde_json::from_slice(&delivery.data) {
+            Ok(payload) => {
+                handle_delivery(payload).await;
+                delivery
+                    .ack(Default::default())
+                    .await
+                    .expect("failed to ack");
+            }
 
-        handle_delivery(data).await;
-
-        delivery
-            .ack(Default::default())
-            .await
-            .expect("failed to ack");
+            Err(e) => {
+                println!("Failed to deserialize payload: {}", e);
+                delivery
+                    .reject(Default::default())
+                    .await
+                    .expect("failed to reject");
+            }
+        }
     }
 }
 
