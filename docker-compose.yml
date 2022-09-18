@@ -28,38 +28,16 @@ services:
         networks:
             - app-net
 
-    api:
-        build: ./api
-        command: yarn dev
-        container_name: pass_api
+    mongodb:
+        image: mongo:5.0
+        container_name: mongodb
         ports:
-            - '4000:4000'
-        environment:
-            - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pass_api
-            - RABBITMQ_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f
-            - JWT_SECRET=bro_this_is_a_insane_secret
+            - '27017:27017'
         volumes:
-            - ./api:/usr/app
-        depends_on:
-            - postgres
-            - rabbitmq
-        restart: always
-        networks:
-            - app-net
-
-    engine:
-        build: ./engine
-        command: cargo watch -x run
-        container_name: pass_engine
+            - 'mongo_data:/data/db'
         environment:
-            - DATABASE_URL=postgres://postgres:postgres@postgres:5432/pass_engine
-            - RABBITMQ_URL=amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f
-        volumes:
-            - ./engine:/usr/app
-        depends_on:
-            - postgres
-            - rabbitmq
-        restart: always
+            - MONGO_INITDB_ROOT_USERNAME=mongo
+            - MONGO_INITDB_ROOT_PASSWORD=mongo
         networks:
             - app-net
 
@@ -71,4 +49,6 @@ volumes:
     postgresql_data:
         driver: local
     rabbitmq_data:
+        driver: local
+    mongo_data:
         driver: local
