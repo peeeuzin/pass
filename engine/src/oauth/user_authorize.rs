@@ -18,6 +18,11 @@ pub async fn user_authorize(channel: Channel) {
         .await
         .unwrap();
 
+    channel
+        .queue_declare("oauth_authorize", Default::default(), Default::default())
+        .await
+        .ok();
+
     let mut consumer = channel
         .basic_consume(
             "user_authorize",

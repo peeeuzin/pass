@@ -10,8 +10,6 @@ mod utils;
 async fn main() {
     dotenv().ok();
 
-    // Connect to RabbitMQ, if fail, repeat every 5 seconds
-
     println!("[Engine] 🚀");
 
     // oauth service
@@ -34,9 +32,12 @@ async fn rabbitmq() -> Connection {
     // Connect to RabbitMQ, if fail, repeat every 5 seconds
     loop {
         match lapin::Connection::connect(&rabbitmq_addr, Default::default()).await {
-            Ok(connection) => break connection,
+            Ok(connection) => {
+                println!("[Engine] Connected to RabbitMQ");
+                break connection;
+            }
             Err(e) => {
-                println!("Failed to connect to RabbitMQ: {}", e);
+                println!("[Engine] Failed to connect to RabbitMQ: {}", e);
                 tokio::time::sleep(std::time::Duration::from_secs(5)).await;
             }
         }
