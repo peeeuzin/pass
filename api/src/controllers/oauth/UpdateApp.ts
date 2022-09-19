@@ -5,7 +5,7 @@ import { UpdateAppService } from '@services/oauth/UpdateApp';
 async function UpdateAppController(request: Request, response: Response) {
     const { appId } = request.params;
     const { name, description, redirectUrl, homeUrl } = request.body;
-    const { userId } = request;
+    const { userId, user } = request;
 
     try {
         if (!appId) throw new HTTPError('appId.required', 400);
@@ -15,6 +15,7 @@ async function UpdateAppController(request: Request, response: Response) {
             description,
             redirectUrl,
             homeUrl,
+            isAuthByOAuth: user.isAuthByOAuth,
         });
 
         response.status(200).json(service);

@@ -6,9 +6,13 @@ type Params = {
     description?: string;
     redirectUrl: string;
     homeUrl: string;
+    isAuthByOAuth: boolean;
 };
 
 async function UpdateAppService(appId: string, userId: string, params: Params) {
+    if (params.isAuthByOAuth) {
+        throw new HTTPError('user.authByOAuth', 401);
+    }
     const app = await prisma.oAuthApp.findFirst({
         where: {
             OR: [

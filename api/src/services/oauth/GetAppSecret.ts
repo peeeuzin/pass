@@ -1,7 +1,14 @@
 import { HTTPError } from '@errors/HTTPError';
 import prisma from '@prisma';
 
-async function GetAppSecretService(appId: string, userId: string) {
+async function GetAppSecretService(
+    appId: string,
+    userId: string,
+    isAuthByOAuth: boolean
+) {
+    if (isAuthByOAuth) {
+        throw new HTTPError('user.authByOAuth', 401);
+    }
     const app = await prisma.oAuthApp.findFirst({
         where: {
             OR: [

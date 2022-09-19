@@ -9,10 +9,15 @@ type Params = {
     redirectUrl: string;
     homeUrl: string;
     userId: string;
+    isAuthByOAuth: boolean;
 };
 
 async function CreateAppService(params: Params) {
-    const { name, description, redirectUrl, homeUrl } = params;
+    const { name, description, redirectUrl, homeUrl, isAuthByOAuth } = params;
+
+    if (isAuthByOAuth) {
+        throw new HTTPError('user.authByOAuth', 401);
+    }
 
     if (!isUrl(redirectUrl)) throw new HTTPError('redirectUrl.invalid', 400);
     if (!isUrl(homeUrl)) throw new HTTPError('homeUrl.invalid', 400);

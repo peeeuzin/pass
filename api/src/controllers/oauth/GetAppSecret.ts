@@ -4,12 +4,16 @@ import { GetAppSecretService } from '@services/oauth/GetAppSecret';
 
 async function GetAppSecretController(request: Request, response: Response) {
     const { appId } = request.params;
-    const { userId } = request;
+    const { userId, user } = request;
 
     try {
         if (!appId) throw new HTTPError('appId.required', 400);
 
-        const service = await GetAppSecretService(appId, userId);
+        const service = await GetAppSecretService(
+            appId,
+            userId,
+            user.isAuthByOAuth
+        );
 
         response.status(200).json(service);
     } catch (error: any) {

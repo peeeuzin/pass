@@ -4,12 +4,16 @@ import { DeleteAppService } from '@services/oauth/DeleteApp';
 
 async function DeleteAppController(request: Request, response: Response) {
     const { appId } = request.params;
-    const { userId } = request;
+    const { userId, user } = request;
 
     try {
         if (!appId) throw new HTTPError('appId.required', 400);
 
-        const service = await DeleteAppService(appId, userId);
+        const service = await DeleteAppService(
+            appId,
+            userId,
+            user.isAuthByOAuth
+        );
 
         response.status(200).json(service);
     } catch (error: any) {

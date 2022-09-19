@@ -4,12 +4,16 @@ import { UpdateAppSecretService } from '@services/oauth/UpdateAppSecret';
 
 async function UpdateAppSecretController(request: Request, response: Response) {
     const { appId } = request.params;
-    const { userId } = request;
+    const { userId, user } = request;
 
     try {
         if (!appId) throw new HTTPError('appId.required', 400);
 
-        const service = await UpdateAppSecretService(appId, userId);
+        const service = await UpdateAppSecretService(
+            appId,
+            userId,
+            user.isAuthByOAuth
+        );
 
         response.status(200).json(service);
     } catch (error: any) {
